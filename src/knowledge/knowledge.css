@@ -1,0 +1,308 @@
+:root {
+  color-scheme: light;
+  --page-bg: #f6f7f8;
+  --panel-bg: #ffffff;
+  --panel-soft: #f2f4f6;
+  --panel-muted: #eceff2;
+  --panel-raised: #ffffff;
+  --text: #171a1f;
+  --muted: #68717d;
+  --muted-strong: #3d4652;
+  --border: #d9dee5;
+  --control-border: #c7ced6;
+  --primary: #343a42;
+  --primary-text: #ffffff;
+  --primary-soft: #eceff3;
+  --accent: #5f6873;
+  --shadow: 0 1px 2px rgb(15 23 42 / 5%);
+  --inset-light: inset 0 1px 0 rgb(255 255 255 / 80%);
+  --focus-ring: 0 0 0 2px rgb(52 58 66 / 18%);
+  --reader-font-size: 17px;
+  --reader-font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  --app-font-scale: 1;
+  --app-font-size: calc(14.5px * var(--app-font-scale));
+  --app-font-xs: calc(var(--app-font-size) * 0.72);
+  --app-font-sm: calc(var(--app-font-size) * 0.82);
+  --app-font-lg: calc(var(--app-font-size) * 1.12);
+  --app-font-2xl: calc(var(--app-font-size) * 1.76);
+  --app-font-stat: calc(var(--app-font-size) * 1.42);
+  font-family: var(--reader-font-family);
+  font-size: var(--app-font-size);
+  color: var(--text);
+  background: var(--page-bg);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-bg: #05070b;
+  --panel-bg: #0d131d;
+  --panel-soft: #090e16;
+  --panel-muted: #131c2a;
+  --panel-raised: #111927;
+  --text: #edf4ff;
+  --muted: #91a1b7;
+  --muted-strong: #cad6e6;
+  --border: #202c3e;
+  --control-border: #2b3a50;
+  --primary: #8de7ff;
+  --primary-text: #ffffff;
+  --primary-soft: #102637;
+  --accent: #c7a6ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 28%), 0 18px 44px rgb(0 0 0 / 30%);
+  --inset-light: inset 0 1px 0 rgb(255 255 255 / 7%);
+  --focus-ring: 0 0 0 2px rgb(141 231 255 / 22%);
+}
+
+body {
+  margin: 0;
+  background: var(--page-bg);
+  font-family: var(--reader-font-family);
+  font-size: var(--app-font-size);
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--control-border);
+  border-radius: 4px;
+  background: var(--primary);
+  color: var(--primary-text);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+button:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+button.secondary {
+  border-color: var(--control-border);
+  background: var(--panel-raised);
+  color: var(--text);
+}
+
+.knowledge-shell {
+  width: min(1040px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 40px;
+}
+
+.page-header,
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--muted-strong);
+  font-size: var(--app-font-sm);
+  font-weight: 750;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--app-font-2xl);
+  line-height: 1.18;
+}
+
+h2 {
+  font-size: var(--app-font-lg);
+  line-height: 1.3;
+}
+
+.document-title,
+.section-heading p,
+#status {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.document-title {
+  margin-top: 8px;
+}
+
+.prompt-section,
+.evidence-section,
+.report-section {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel-bg);
+  padding: 18px;
+  box-shadow: none;
+}
+
+.prompt-section {
+  display: grid;
+  gap: 14px;
+}
+
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 132px;
+  border: 1px solid var(--control-border);
+  border-radius: 4px;
+  padding: 12px;
+  color: var(--text);
+  background: var(--panel-raised);
+  line-height: 1.55;
+  resize: vertical;
+  box-shadow: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring), var(--inset-light);
+  outline: none;
+}
+
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.summary-strip div {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel-bg);
+  padding: 14px 16px;
+  box-shadow: none;
+}
+
+.summary-strip span {
+  display: block;
+  font-size: var(--app-font-stat);
+  font-weight: 800;
+}
+
+.summary-strip small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.report-section {
+  display: grid;
+  gap: 14px;
+}
+
+.evidence-section {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 10px;
+}
+
+.evidence-item {
+  display: grid;
+  gap: 7px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: 4px;
+  background: var(--panel-raised);
+  padding: 12px;
+}
+
+.evidence-item-title {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.evidence-item-text,
+.evidence-item-summary,
+.evidence-empty {
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: var(--app-font-sm);
+  line-height: 1.55;
+}
+
+.evidence-item-meta {
+  color: var(--muted);
+  font-size: var(--app-font-xs);
+  line-height: 1.45;
+}
+
+.evidence-empty {
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  background: var(--panel-soft);
+  padding: 12px;
+}
+
+.report-output {
+  min-height: 320px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel-soft);
+  padding: 18px;
+  white-space: pre-wrap;
+  line-height: 1.72;
+  box-shadow: none;
+}
+
+.report-output-streaming {
+  border-color: color-mix(in srgb, var(--primary) 42%, var(--border));
+  background: color-mix(in srgb, var(--panel-soft) 86%, var(--primary-soft));
+}
+
+.report-output-streaming::before,
+.report-output-incomplete::before {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: var(--app-font-sm);
+  font-weight: 760;
+}
+
+.report-output-streaming::before {
+  content: "生成中预览";
+}
+
+.report-output-incomplete::before {
+  content: "未完成草稿";
+}
+
+@media (max-width: 720px) {
+  .page-header,
+  .section-heading {
+    display: grid;
+  }
+
+  .summary-strip {
+    grid-template-columns: 1fr;
+  }
+}

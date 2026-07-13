@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StepRead 设置</title>
+    <link rel="stylesheet" href="./options.css">
+  </head>
+  <body>
+    <main class="options-shell">
+      <aside class="settings-nav" aria-label="设置导航">
+        <a href="#aiConfig">基础 AI</a>
+        <a href="#contextConfig">context 接入</a>
+        <a href="#readerConfig">阅读器外观</a>
+      </aside>
+
+      <section class="settings-content">
+        <header class="page-header">
+          <h1>StepRead 设置</h1>
+          <p>这里集中管理模型调用、context 接入和阅读器外观。密钥只保存到本机浏览器扩展存储。</p>
+        </header>
+
+        <form id="settingsForm" class="settings-form" novalidate>
+          <section id="aiConfig" class="settings-section" aria-labelledby="aiConfigTitle">
+            <h2 id="aiConfigTitle">基础 AI</h2>
+            <p class="section-note">第一次使用时，通常只需要在这里填写模型接口、API 密钥和模型名称。知识图谱 prompt 在知识图谱页面按次填写，不在设置页保存长期版本。</p>
+            <p class="section-note">默认情况下，划线问答和知识图谱都会复用这里的模型。</p>
+
+            <div class="form-grid">
+              <label>
+                <span>接口地址</span>
+                <small>OpenAI-compatible 接口的基础地址，例如 https://api.openai.com/v1。</small>
+                <input id="baseUrl" name="baseUrl" type="url" autocomplete="off" placeholder="https://api.openai.com/v1">
+              </label>
+
+              <label>
+                <span>API 密钥</span>
+                <small>调用模型服务所需的密钥；只保存到本机浏览器扩展存储。</small>
+                <input id="apiKey" name="apiKey" type="password" autocomplete="off" placeholder="sk-...">
+              </label>
+
+              <label>
+                <span>模型名称</span>
+                <small>填写服务商提供的模型名称，例如 gpt-4o-mini。</small>
+                <input id="model" name="model" type="text" autocomplete="off" placeholder="gpt-4o-mini">
+              </label>
+
+              <label class="checkbox-with-note">
+                <input id="demoMode" name="demoMode" type="checkbox">
+                <span>
+                  <strong>启用 demo mode</strong>
+                  <small>开启时不调用真实 API，只返回本地模拟答案。</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="prompt-grid">
+              <label>
+                <span>划线问答 system prompt</span>
+                <small>控制右侧“划线问答”的回答原则、语气和边界。它会作为 system message 发送给模型。</small>
+                <textarea id="systemPrompt" name="systemPrompt" rows="5"></textarea>
+              </label>
+
+              <label>
+                <span>划线问答 user prompt 模板</span>
+                <small>控制选区、问题和 context 资料包怎样拼给模型。可用变量：{{selection}}、{{question}}、{{context}}。</small>
+                <textarea id="selectionPrompt" name="selectionPrompt" rows="7"></textarea>
+              </label>
+            </div>
+          </section>
+
+          <section id="contextConfig" class="settings-section" aria-labelledby="contextConfigTitle">
+            <div class="context-intro">
+              <h2 id="contextConfigTitle">AI context 接入</h2>
+              <p class="section-note">context 是每次请求 AI 时，随问题一起发送给模型的资料包。这里分开控制“划线问答”和“知识图谱”两套资料包，可以选择原文、目录、历史划线和历史问答；内容越完整，回答依据越充分，但响应会更慢，也更容易接近模型文本上限。</p>
+              <div class="context-status-wrap">
+                <span class="context-status-label">当前文档数据状态</span>
+                <p id="contextAvailabilityPanel" class="context-availability" role="status">正在读取当前文档数据状态；这里展示的是记录数量，不是模块开关。</p>
+              </div>
+            </div>
+
+            <fieldset class="settings-fieldset context-fieldset">
+              <legend>划线问答 context</legend>
+              <div class="context-fieldset-intro">
+                <p class="section-note">用于回答某一条划线旁边的问题。建议先保留段落和少量相邻段落；只有问题需要更长推理链时，再打开章节全文或目录结构。</p>
+              </div>
+              <div class="context-flow">
+              <div class="context-group">
+                <div class="context-group-header">
+                  <span class="context-group-label">原文范围</span>
+                  <h3>控制 AI 能看到的正文边界</h3>
+                  <p class="section-note">这些选项决定从划线附近取多少原文，越往后文本量越大。</p>
+                </div>
+                <div class="context-grid compact-context-grid">
+                  <label class="context-card checkbox-card">
+                    <input id="aiSelectionIncludeSelectedBlock" name="aiSelectionIncludeSelectedBlock" type="checkbox">
+                    <span>
+                      <strong>划线所在段落</strong>
+                      <small>把划线所在的正文 block 发给 AI，让它看到划线附近的完整句段。</small>
+                    </span>
+                  </label>
+
+                  <label class="context-card">
+                    <span>相邻段落数量</span>
+                    <small>划线所在段落前后各带入多少个 block；0 表示只发送划线所在段落。</small>
+                    <input id="aiSelectionNeighborBlockCount" name="aiSelectionNeighborBlockCount" type="number" min="0" step="1">
+                  </label>
+
+                  <label class="context-card">
+                    <span>当前章节/小节全文</span>
+                    <small>把当前小节或当前章节的全部正文 block 发给 AI。章节标题会随问题发送，不需要在这里单独开关。</small>
+                    <select id="aiSelectionChapterTextScope" name="aiSelectionChapterTextScope">
+                      <option value="none">不接入章节全文</option>
+                      <option value="current-section">当前小节全文</option>
+                      <option value="current-chapter">当前章节全文</option>
+                      <option value="previous-chapters">上面所有章节全文</option>
+                      <option value="full-text">全文</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="context-group">
+                <div class="context-group-header">
+                  <span class="context-group-label">目录结构</span>
+                  <h3>让回答知道当前位置和全文结构</h3>
+                  <p class="section-note">目录适合定位章节关系和当前阅读位置。即使当前文档暂时没有结构数据，这项也可以继续保存；生成 context 时只会读取已有目录。</p>
+                </div>
+                <div class="context-grid narrow-context-grid">
+                  <label class="context-card checkbox-card">
+                    <input id="aiSelectionIncludeDocumentOutline" name="aiSelectionIncludeDocumentOutline" type="checkbox">
+                    <span>
+                      <strong>章节目录</strong>
+                      <small>把整篇文档的目录发给 AI，帮助它理解当前位置和全文结构。</small>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="context-group">
+                <div class="context-group-header">
+                  <span class="context-group-label">历史问答</span>
+                  <h3>决定是否复用之前的追问记录</h3>
+                  <p class="section-note">连续追问适合保持当前对话上下文；历史问答适合复用同一文档里已经澄清过的信息。</p>
+                </div>
+                <div class="context-grid history-context-grid">
+                  <label class="context-card">
+                    <span>历史问答范围</span>
+                    <small>当前划线问答只包含本条划线下的追问；整篇文档历史问答会读取当前文档已保存的所有划线问答。</small>
+                    <select id="aiSelectionQaHistoryScope" name="aiSelectionQaHistoryScope">
+                      <option value="current-thread">当前划线问答</option>
+                      <option value="all-highlights">整篇文档历史问答</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="settings-fieldset context-fieldset">
+              <legend>知识图谱 context</legend>
+              <div class="context-fieldset-intro">
+                <p class="section-note">用于生成整篇文档的学习结构，不针对某一条划线回答。这里更适合接入全局证据和目录结构，但全文仍建议作为最后的兜底选项。</p>
+              </div>
+              <div class="context-flow">
+                <div class="context-group">
+                  <div class="context-group-header">
+                    <span class="context-group-label">阅读证据</span>
+                    <h3>选择知识图谱的核心材料</h3>
+                    <p class="section-note">划线和问答是你已经关注过的内容，通常比直接接入全文更稳定。</p>
+                  </div>
+                  <div class="context-grid">
+                    <label class="context-card checkbox-card">
+                      <input id="aiKnowledgeIncludeHighlights" name="aiKnowledgeIncludeHighlights" type="checkbox">
+                      <span>
+                        <strong>全部划线</strong>
+                        <small>把当前文档中保存过的所有划线文本发给 AI，作为知识图谱的核心材料。</small>
+                      </span>
+                    </label>
+
+                    <label class="context-card checkbox-card">
+                      <input id="aiKnowledgeIncludeThreadHistory" name="aiKnowledgeIncludeThreadHistory" type="checkbox">
+                      <span>
+                        <strong>全部问答</strong>
+                        <small>把当前文档中的历史问答发给 AI，让知识图谱吸收你已经追问和澄清过的信息。</small>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="context-group">
+                  <div class="context-group-header">
+                    <span class="context-group-label">局部原文</span>
+                    <h3>为划线补充必要的上下文</h3>
+                    <p class="section-note">这些设置会围绕每条划线补充正文段落，适合减少孤立摘句带来的误解。</p>
+                  </div>
+                  <div class="context-grid compact-context-grid">
+                    <label class="context-card checkbox-card">
+                      <input id="aiKnowledgeIncludeSelectedBlock" name="aiKnowledgeIncludeSelectedBlock" type="checkbox">
+                      <span>
+                        <strong>每条划线所在段落</strong>
+                        <small>为每条划线补充其所在 block，避免 AI 只看到孤立划线。</small>
+                      </span>
+                    </label>
+
+                    <label class="context-card">
+                      <span>每条划线的相邻段落数量</span>
+                      <small>设置每条划线前后各带入多少个 block；0 表示只发送划线所在段落。</small>
+                      <input id="aiKnowledgeNeighborBlockCount" name="aiKnowledgeNeighborBlockCount" type="number" min="0" step="1">
+                    </label>
+                  </div>
+                </div>
+
+                <div class="context-group">
+                  <div class="context-group-header">
+                    <span class="context-group-label">目录结构</span>
+                    <h3>决定知识图谱的层级依据</h3>
+                    <p class="section-note">目录负责章节层级和当前位置。缺少真实标题结构时，目录设置仍可保存；生成 context 时只会读取当前文档已有的结构数据。</p>
+                  </div>
+                  <div class="context-grid narrow-context-grid">
+                    <label class="context-card checkbox-card">
+                      <input id="aiKnowledgeIncludeDocumentOutline" name="aiKnowledgeIncludeDocumentOutline" type="checkbox">
+                      <span>
+                        <strong>章节目录</strong>
+                        <small>把整篇文档的目录发给 AI，帮助它组织知识图谱的层级结构。</small>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="context-group">
+                  <div class="context-group-header">
+                    <span class="context-group-label">全文兜底</span>
+                    <h3>仅在需要全篇扫描时开启</h3>
+                    <p class="section-note">全文会显著增加 token 占用。长文档建议先用划线、问答和目录生成，再视结果决定是否扩大范围。</p>
+                  </div>
+                  <div class="context-grid history-context-grid">
+                    <label class="context-card">
+                      <span>全文范围</span>
+                      <small>控制是否把正文原文作为全局材料发给 AI。长文档选择全文可能显著增加 token 占用。</small>
+                      <select id="aiKnowledgeFullTextScope" name="aiKnowledgeFullTextScope">
+                        <option value="none">不接入全文</option>
+                        <option value="full-text">全文</option>
+                        <option value="before-last-highlight">最后一次划线之前的所有文本</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </section>
+
+          <section id="readerConfig" class="settings-section" aria-labelledby="readerConfigTitle">
+            <h2 id="readerConfigTitle">阅读器外观</h2>
+            <p class="section-note">如果正文阅读不舒服、字体偏小，或想切换浅色/深色主题，可以修改这里。</p>
+            <div class="form-grid">
+              <label>
+                <span>阅读字体</span>
+                <small>影响正文阅读区，也会同步到弹窗、设置页、知识图谱和阅读器控件。</small>
+                <select id="fontFamily" name="fontFamily">
+                  <option value="system">系统默认</option>
+                  <option value="yahei">微软雅黑</option>
+                  <option value="serif">宋体/衬线</option>
+                  <option value="kaiti">楷体</option>
+                  <option value="mono">等宽字体</option>
+                </select>
+              </label>
+
+              <label>
+                <span>正文字号</span>
+                <small>调大字号可以提升可读性，但同屏显示内容会减少。</small>
+                <input id="fontSize" name="fontSize" type="range" min="14" max="24" step="1">
+                <output id="fontSizeValue" for="fontSize">17px</output>
+              </label>
+            </div>
+
+            <div class="reader-preview" aria-label="阅读器字号预览">
+              <strong>字号预览</strong>
+              <p>这是一段正文预览。调整上方字号后，阅读器正文、公式、表格、注释和扩展界面文字会跟随变化。</p>
+            </div>
+
+            <fieldset class="theme-options">
+              <legend>阅读主题</legend>
+              <label class="radio-card">
+                <input id="themeLight" name="theme" type="radio" value="light">
+                <span>
+                  <strong>浅白色</strong>
+                  <small>冷白背景、细线边界和清爽面板。</small>
+                </span>
+              </label>
+              <label class="radio-card">
+                <input id="themeDark" name="theme" type="radio" value="dark">
+                <span>
+                  <strong>暗黑色</strong>
+                  <small>深黑背景、亮色文字和轻微彩色强调。</small>
+                </span>
+              </label>
+            </fieldset>
+          </section>
+
+          <footer class="form-actions">
+            <button type="submit">保存设置</button>
+            <button id="resetButton" type="button" class="secondary">恢复默认</button>
+          </footer>
+        </form>
+
+        <p id="status" class="status" role="status"></p>
+      </section>
+    </main>
+    <script type="module" src="../shared/theme.js"></script>
+    <script type="module" src="./options.js"></script>
+  </body>
+</html>

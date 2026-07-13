@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StepRead</title>
+    <link rel="stylesheet" href="./popup.css">
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header>
+        <h1>StepRead</h1>
+      </header>
+      <section class="current-tab" aria-label="当前标签页">
+        <div class="label">当前 URL</div>
+        <div id="currentUrl" class="url">读取中...</div>
+      </section>
+      <section class="actions" aria-label="操作">
+        <button id="openReaderButton" type="button">在 StepRead 阅读器中打开 PDF</button>
+        <button id="selectLocalPdfButton" type="button" class="secondary">选择本地 PDF</button>
+        <input id="localPdfFileInput" class="popup-file-input" type="file" accept="application/pdf,.pdf">
+        <button id="openOptionsButton" type="button" class="secondary">打开设置</button>
+      </section>
+      <p id="status" class="status" role="status"></p>
+    </main>
+    <script type="module" src="../shared/theme.js"></script>
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StepRead 知识图谱</title>
+    <link rel="stylesheet" href="./knowledge.css">
+  </head>
+  <body>
+    <main class="knowledge-shell">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">StepRead</p>
+          <h1>知识图谱</h1>
+          <p id="documentTitle" class="document-title">正在读取文档...</p>
+        </div>
+        <button id="reloadButton" type="button" class="secondary">读取最新记录</button>
+      </header>
+
+      <section class="prompt-section" aria-labelledby="promptTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="promptTitle">知识图谱 prompt</h2>
+            <p>这里写本次生成想重点整理的方向；每次知识图谱都可以在上一次基础上修改 prompt 后重新生成。</p>
+          </div>
+          <button id="generateButton" type="button">生成知识图谱</button>
+        </div>
+        <textarea
+          id="userPrompt"
+          rows="5"
+          placeholder="请重点总结我目前已经理解的核心概念、概念之间的推理关系、仍不稳定的地方，以及下一步学习路径。"
+        ></textarea>
+      </section>
+
+      <section class="summary-strip" aria-label="阅读记录统计">
+        <div>
+          <span id="highlightCount">0</span>
+          <small>历史划线</small>
+        </div>
+        <div>
+          <span id="threadCount">0</span>
+          <small>问答线程</small>
+        </div>
+        <div>
+          <span id="messageCount">0</span>
+          <small>问答对话消息</small>
+        </div>
+        <div>
+          <span id="summaryCount">0</span>
+          <small>问答摘要</small>
+        </div>
+      </section>
+
+      <section class="report-section" aria-labelledby="reportTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="reportTitle">知识图谱正文</h2>
+            <p id="status" role="status">等待读取知识图谱。</p>
+          </div>
+        </div>
+        <article id="reportOutput" class="report-output">暂无知识图谱。请点击“生成知识图谱”。</article>
+      </section>
+
+      <section class="evidence-section" aria-labelledby="evidenceTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="evidenceTitle">阅读证据</h2>
+            <p>知识图谱基于历史划线、问答对话消息和摘要生成；“问答对话消息”是每条划线线程里的 selection/user/assistant 记录，不是摘要数。</p>
+          </div>
+        </div>
+        <div id="evidenceList" class="evidence-list">
+          <p class="evidence-empty">暂无阅读证据。</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="../shared/theme.js"></script>
+    <script type="module" src="./knowledge.js"></script>
+  </body>
+</html>

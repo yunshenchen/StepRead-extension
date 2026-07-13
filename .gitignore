@@ -1,0 +1,31 @@
+# Local OS/editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Local dependencies/build folders
+node_modules/
+dist/
+build/
+coverage/
+
+# Local extension/runtime data
+*.log
+*.tmp
+*.bak
+*.zip
+*.crx
+*.pem
+
+# Local documents and reading materials
+*.pdf
+*.epub
+
+# Secrets and private config
+.env
+.env.*
+*key*
+*secret*
+*token*

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StepRead</title>
+    <link rel="stylesheet" href="./reader.css">
+  </head>
+  <body>
+    <main class="reader-app">
+      <header class="topbar">
+        <div class="title-zone">
+          <h1 id="documentTitle">StepRead</h1>
+          <p id="sourceUrl" class="source-url"></p>
+        </div>
+        <nav class="toolbar" aria-label="阅读器操作">
+          <button id="importPdfButton" type="button">打开 PDF</button>
+          <div class="pdf-zoom-controls" aria-label="PDF 缩放">
+            <button id="pdfZoomOutButton" type="button" class="secondary zoom-button" title="缩小 PDF">-</button>
+            <button id="pdfZoomResetButton" type="button" class="secondary zoom-reset-button" title="重置 PDF 缩放">
+              <span id="pdfZoomValue">100%</span>
+            </button>
+            <button id="pdfZoomInButton" type="button" class="secondary zoom-button" title="放大 PDF">+</button>
+          </div>
+          <input id="pdfFileInput" class="pdf-file-input" type="file" accept="application/pdf,.pdf">
+          <button id="openOptionsButton" type="button" class="secondary">设置</button>
+        </nav>
+      </header>
+
+      <section id="workspace" class="workspace">
+        <aside class="sidebar" aria-label="文档和书签">
+          <section class="sidebar-section">
+            <button id="documentSectionToggle" class="section-toggle" type="button" aria-expanded="true">
+              <span>文档</span>
+              <span class="section-chevron">▾</span>
+            </button>
+            <div class="document-actions">
+              <button id="newFolderButton" class="secondary icon-add-button" type="button" title="新建文件夹" aria-label="新建文件夹">+</button>
+            </div>
+            <div id="folderCreateRow" class="folder-create-row" hidden>
+              <input id="folderNameInput" type="text" placeholder="文件夹名称" autocomplete="off">
+              <button id="confirmFolderButton" class="icon-mini-button" type="button" title="确定" aria-label="确定">✓</button>
+              <button id="cancelFolderButton" class="icon-mini-button secondary" type="button" title="取消" aria-label="取消">×</button>
+            </div>
+            <div id="documentList" class="document-list"></div>
+            <section id="trashSection" class="trash-section" hidden>
+              <button id="trashToggle" class="trash-toggle" type="button" aria-expanded="false">
+                <span>回收站</span>
+                <small id="trashCount">0</small>
+              </button>
+              <div id="trashList" class="trash-list" hidden></div>
+            </section>
+          </section>
+          <section class="sidebar-section">
+            <button id="tocSectionToggle" class="section-toggle" type="button" aria-expanded="true">
+              <span>书签</span>
+              <span class="section-chevron">▾</span>
+            </button>
+            <p class="section-help">由标题自动生成，点击后跳转到正文对应位置。</p>
+            <ol id="tocList" class="toc-list"></ol>
+          </section>
+        </aside>
+
+        <div id="leftResizer" class="workspace-resizer left-resizer" role="separator" aria-label="调整左侧栏宽度" aria-orientation="vertical" aria-valuemin="160" tabindex="0">
+          <button id="sidebarCollapseButton" class="sidebar-collapse-button" type="button" title="收起左侧栏" aria-expanded="true">◀</button>
+        </div>
+
+        <section class="document-pane" aria-label="正文阅读区">
+          <div id="currentSectionBar" class="current-section-bar">
+            <span id="currentSectionText" class="current-section-text">当前章节</span>
+            <span id="pdfPageIndicator" class="pdf-page-indicator" hidden>第 - / - 页</span>
+          </div>
+          <article id="documentContent" class="document-content" tabindex="0" aria-label="正文"></article>
+        </section>
+        <button id="selectionAskButton" class="selection-ask-button" type="button" hidden>进入侧边提问</button>
+
+        <div id="rightResizer" class="workspace-resizer right-resizer" role="separator" aria-label="调整问答栏宽度" aria-orientation="vertical" aria-valuemin="260" tabindex="0"></div>
+
+        <aside class="qa-panel" aria-label="问答面板">
+          <header class="qa-header">
+            <button id="panelToggleButton" class="icon-button" type="button" title="查看历史划线">◀</button>
+            <h2 id="qaPanelTitle">划线问答</h2>
+            <button id="knowledgeButton" type="button" class="secondary knowledge-button">知识图谱</button>
+          </header>
+
+          <section id="historyLayer" class="qa-layer" hidden>
+            <section class="thread-section">
+              <div id="threadList" class="thread-list"></div>
+            </section>
+          </section>
+
+          <section id="detailLayer" class="qa-layer qa-detail">
+            <section class="selection-card">
+              <h3 id="selectionTitle">当前划线</h3>
+              <p id="activeSelectionPreview" class="selection-preview">尚未选择正文文本。</p>
+            </section>
+
+            <div id="messageList" class="message-list chat-list"></div>
+
+            <footer class="composer">
+              <textarea id="questionInput" rows="3" placeholder="输入问题，Enter 发送，Shift+Enter 换行"></textarea>
+              <button id="sendQuestionButton" type="button" disabled>发送</button>
+            </footer>
+          </section>
+        </aside>
+      </section>
+
+      <p id="status" class="app-status" role="status"></p>
+      <menu id="documentContextMenu" class="context-menu" hidden>
+        <button type="button" data-action="rename">重命名</button>
+        <button type="button" data-action="delete">删除</button>
+        <button type="button" data-action="restore">还原</button>
+      </menu>
+    </main>
+    <script src="../vendor/pdfjs/pdf.min.js"></script>
+    <script type="module" src="../shared/theme.js"></script>
+    <script type="module" src="./reader.js"></script>
+  </body>
+</html>
